@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Maxion Currículos</title>
+
+  <link rel="stylesheet" href="style.css">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+
+<body>
+
+  <header class="header">
+<div class="logo">
+
+  <img src="img/logo.png" alt="Logo Maxion">
+
+<nav class="menu" id="menu">
+
+  <a href="empresa.html">EMPRESA</a>
+
+  <a href="produto.html">PRODUTO</a>
+
+  <a href="inovacao.html">INOVAÇÃO</a>
+
+  <a href="pessoas.html">PESSOAS</a>
+
+  <a href="fornecedores.html">FORNECEDORES</a>
+
+</nav>
+
+  </header>
+
+  <section class="hero">
+
+    <div class="overlay"></div>
+
+    <div class="hero-content">
+
+      <span class="tag">
+        RECRUTAMENTO MAXION
+      </span>
+
+      <h1>
+        Envie seu currículo <br>
+        para oportunidades <br>
+        profissionais.
+      </h1>
+
+      <p>
+        Plataforma moderna para cadastro de candidatos
+        com envio de currículos em PDF.
+      </p>
+
+    </div>
+
+  </section>
+
+  <section class="form-section">
+
+    <div class="form-card">
+
+      <div class="title-area">
+
+        <h2>
+          Cadastro de Currículo
+        </h2>
+
+        <p>
+          Preencha seus dados e envie o PDF do currículo.
+        </p>
+
+      </div>
+
+      <form id="formCurriculo">
+
+        <div class="input-group">
+
+          <label>
+            Nome completo
+          </label>
+
+          <input
+            type="text"
+            id="nome"
+            placeholder="Digite seu nome"
+            required
+          >
+
+        </div>
+
+        <div class="input-group">
+
+          <label>
+            Currículo PDF
+          </label>
+
+          <label class="upload-box">
+
+            <div class="upload-icon">
+              ⬆
+            </div>
+
+            <h3>
+              Selecionar arquivo
+            </h3>
+
+            <p>
+              Apenas PDF • Máximo 5MB
+            </p>
+
+            <input
+              type="file"
+              id="pdf"
+              accept=".pdf"
+              required
+            >
+
+          </label>
+
+          <span class="file-name" id="fileName">
+            Nenhum arquivo selecionado
+          </span>
+
+        </div>
+
+        <button type="submit" class="btn">
+          ENVIAR CURRÍCULO
+        </button>
+
+        <div class="message success" id="success">
+          Currículo enviado com sucesso.
+        </div>
+
+        <div class="message error" id="error">
+          Erro ao enviar currículo.
+        </div>
+
+      </form>
+
+    </div>
+
+  </section>
+
+  <script src="script.js"></script>
+
+</body>
+</html>
