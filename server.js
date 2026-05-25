@@ -1,4 +1,4 @@
-require('dotenv').config(); // 👈 Carrega as variáveis do .env (DEVE SER A PRIMEIRA LINHA)
+require('dotenv').config(); 
 
 const express = require('express');
 const multer = require('multer');
@@ -10,7 +10,7 @@ const mysql = require('mysql2/promise');
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// Configuração do Banco de Dados MySQL (puxando do .env)
+
 const pool = mysql.createPool({
     host: process.env.DB_HOST,
     user: process.env.DB_USER,
@@ -21,23 +21,21 @@ const pool = mysql.createPool({
     queueLimit: 0
 });
 
-// Configurações do Express
+
 app.use(cors());
 app.use(express.json());
 
-// Cria a pasta 'uploads' caso ela não exista
+
 const uploadDir = 'uploads/';
 if (!fs.existsSync(uploadDir)) {
     fs.mkdirSync(uploadDir);
 }
 
-// Configuração do Multer (Upload de Arquivos)
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
         cb(null, uploadDir);
     },
     filename: function (req, file, cb) {
-        // Cria um nome único baseado na data e número aleatório para não sobrescrever PDFs
         const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
         cb(null, uniqueSuffix + path.extname(file.originalname));
     }
@@ -45,7 +43,7 @@ const storage = multer.diskStorage({
 
 const upload = multer({
     storage: storage,
-    limits: { fileSize: 5 * 1024 * 1024 }, // Limite restrito de 5MB
+    limits: { fileSize: 5 * 1024 * 1024 }, 
     fileFilter: function (req, file, cb) {
         if (file.mimetype === 'application/pdf') {
             cb(null, true);
@@ -55,11 +53,7 @@ const upload = multer({
     }
 });
 
-// ==========================================
-// ROTAS DA APLICAÇÃO
-// ==========================================
 
-// 1. Rota para ENVIAR currículo (Upload + Insert no Banco)
 app.post('/api/curriculos', upload.single('pdf'), async (req, res) => {
     try {
         const nome = req.body.nome;
@@ -72,11 +66,10 @@ app.post('/api/curriculos', upload.single('pdf'), async (req, res) => {
             return res.status(400).json({ error: 'O nome do candidato é obrigatório.' });
         }
 
-        // Salva os dados no banco 'maxion', tabela 'curriculos'
         const query = 'INSERT INTO curriculos (nome, nome_arquivo, caminho_arquivo) VALUES (?, ?, ?)';
         const [result] = await pool.execute(query, [nome, req.file.filename, req.file.path]);
 
-        console.log('✅ Novo currículo salvo! ID:', result.insertId);
+        console.log(' Novo currículo salvo! ID:', result.insertId);
 
         res.status(201).json({ 
             mensagem: 'Currículo enviado e salvo com sucesso!', 
@@ -89,7 +82,6 @@ app.post('/api/curriculos', upload.single('pdf'), async (req, res) => {
     }
 });
 
-// 2. Rota para LISTAR todos os currículos (Select no Banco)
 app.get('/api/curriculos', async (req, res) => {
     try {
         const [rows] = await pool.execute('SELECT id, nome, data_envio FROM curriculos ORDER BY data_envio DESC');
@@ -100,7 +92,6 @@ app.get('/api/curriculos', async (req, res) => {
     }
 });
 
-// 3. Rota para BAIXAR um PDF específico pelo ID
 app.get('/api/curriculos/download/:id', async (req, res) => {
     try {
         const id = req.params.id;
@@ -119,7 +110,6 @@ app.get('/api/curriculos/download/:id', async (req, res) => {
             return res.status(404).json({ error: 'O arquivo físico não foi encontrado no servidor.' });
         }
 
-        // Envia o arquivo para download
         res.download(caminhoAbsoluto, curriculo.nome_arquivo);
 
     } catch (error) {
@@ -128,11 +118,6 @@ app.get('/api/curriculos/download/:id', async (req, res) => {
     }
 });
 
-// ==========================================
-// MIDDLEWARES DE ERRO E INICIALIZAÇÃO
-// ==========================================
-
-// Middleware para capturar erros do Multer (ex: tamanho excedido)
 app.use((err, req, res, next) => {
     if (err instanceof multer.MulterError && err.code === 'LIMIT_FILE_SIZE') {
         return res.status(400).json({ error: 'O arquivo excede o limite de 5MB.' });
@@ -142,14 +127,14 @@ app.use((err, req, res, next) => {
     next();
 });
 
-// Inicia o servidor e testa a conexão com o banco
+
 app.listen(PORT, async () => {
     try {
         await pool.getConnection();
-        console.log(`🚀 Servidor rodando na porta ${PORT}`);
-        console.log(`🗄️  Conectado com sucesso ao banco de dados MySQL`);
+        console.log(`Servidor rodando na porta ${PORT}`);
+        console.log(`Conectado com sucesso ao banco de dados MySQL`);
     } catch (dbError) {
-        console.error('❌ Falha ao conectar no banco de dados:', dbError.message);
+        console.error(' Falha ao conectar no banco de dados:', dbError.message);
         console.log('Verifique se o XAMPP/MySQL está rodando e se os dados no .env estão corretos.');
     }
 });
